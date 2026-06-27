@@ -1,12 +1,10 @@
 import { useState } from 'react'
-import axios from 'axios'
 import LiveGraph from '../components/LiveGraph'
 
 export default function LiveAnalytics() {
   const [videoUrl, setVideoUrl] = useState('')
   const [videoId, setVideoId] = useState('')
   const [error, setError] = useState(null)
-  const WORKER_URL = import.meta.env.VITE_WORKER_URL
 
   const extractVideoId = (url) => {
     const match = url.match(/(?:v=|\/)([0-9A-Za-z_-]{11})/)
@@ -55,7 +53,7 @@ export default function LiveAnalytics() {
         </div>
       </div>
 
-      {videoId && <LiveGraph videoId={videoId} WORKER_URL={WORKER_URL} />}
+      {videoId && <LiveGraph videoId={videoId} />}
     </div>
   )
 }
