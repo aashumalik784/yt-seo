@@ -1,6 +1,6 @@
 import { useState } from 'react'
 
-export default function SEOCard({ title, data, onCopy }) {
+export default function SEOCard({ title, data }) {
   const [copied, setCopied] = useState(false)
 
   const handleCopy = () => {
@@ -8,7 +8,6 @@ export default function SEOCard({ title, data, onCopy }) {
       navigator.clipboard.writeText(data)
       setCopied(true)
       setTimeout(() => setCopied(false), 2000)
-      if (onCopy) onCopy()
     }
   }
 
