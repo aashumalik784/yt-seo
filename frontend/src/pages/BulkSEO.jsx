@@ -17,7 +17,7 @@ export default function BulkSEO() {
   const handleGenerate = async () => {
     const videoId = extractVideoId(videoUrl)
     if (!videoId) {
-      setError('Invalid YouTube URL. Please check and try again.')
+      setError('Invalid YouTube URL')
       return
     }
     setLoading(true)
@@ -30,7 +30,7 @@ export default function BulkSEO() {
       })
       setSeoData({ ...seoRes.data.data, videoId })
     } catch (err) {
-      setError(err.response?.data?.error || 'Failed to generate SEO. Worker might be busy.')
+      setError(err.response?.data?.error || 'Failed to generate SEO')
     }
     setLoading(false)
   }
@@ -44,7 +44,7 @@ export default function BulkSEO() {
   const CopyBtn = ({ text, field }) => (
     <button
       onClick={() => handleCopy(text, field)}
-      className="px-3 py-1 bg-gray-700 hover:bg-red-600 rounded text-xs font-bold transition flex items-center gap-1"
+      className="px-3 py-1 bg-gray-700 hover:bg-red-600 rounded text-xs font-bold transition"
     >
       {copied === field ? '✓ Copied' : '📋 Copy'}
     </button>  )
@@ -53,11 +53,10 @@ export default function BulkSEO() {
     <div className="max-w-4xl mx-auto p-4">
       <div className="text-center mb-8">
         <h1 className="text-3xl md:text-4xl font-bold text-white mb-2">🔍 YouTube SEO Search Box</h1>
-        <p className="text-gray-400">Paste any video link below to auto-generate Title, Description, Tags, Hashtags & Thumbnail</p>
+        <p className="text-gray-400">Paste any video link to auto-generate Title, Description, Tags, Hashtags and Thumbnail</p>
       </div>
 
-      {/* SEARCH BOX */}
-      <div className="bg-gray-800 rounded-xl p-6 mb-8 shadow-lg border border-gray-700">
+      <div className="bg-gray-800 rounded-xl p-6 mb-8 border border-gray-700">
         <label className="block text-white font-bold mb-3 text-lg">🔗 YouTube Video URL:</label>
         <div className="flex flex-col sm:flex-row gap-3">
           <input
@@ -70,7 +69,7 @@ export default function BulkSEO() {
           <button
             onClick={handleGenerate}
             disabled={loading || !videoUrl}
-            className="bg-red-600 hover:bg-red-700 text-white px-8 py-4 rounded-lg font-bold text-lg disabled:opacity-50 disabled:cursor-not-allowed whitespace-nowrap"
+            className="bg-red-600 hover:bg-red-700 text-white px-8 py-4 rounded-lg font-bold text-lg disabled:opacity-50 whitespace-nowrap"
           >
             {loading ? '⏳ Generating...' : '🚀 Generate SEO'}
           </button>
@@ -82,41 +81,25 @@ export default function BulkSEO() {
         )}
       </div>
 
-      {/* RESULTS WITH COPY ICONS */}
       {seoData && (
-        <div className="space-y-5 animate-fade-in">
-          
-          {/* THUMBNAIL GENERATOR / PREVIEW */}
+        <div className="space-y-5">
           <div className="bg-gray-800 rounded-xl p-5 border border-gray-700">
             <div className="flex justify-between items-center mb-3">
               <h3 className="text-red-400 font-bold text-lg">🖼️ Thumbnail Preview</h3>
-              <a 
-                href={`https://img.youtube.com/vi/${seoData.videoId}/maxresdefault.jpg`} 
-                target="_blank" 
-                rel="noreferrer"
-                className="px-3 py-1 bg-blue-600 hover:bg-blue-700 rounded text-xs font-bold"
-              >
-                ⬇️ Download HD              </a>
+              <a href={`https://img.youtube.com/vi/${seoData.videoId}/maxresdefault.jpg`} target="_blank" rel="noreferrer" className="px-3 py-1 bg-blue-600 hover:bg-blue-700 rounded text-xs font-bold">⬇️ Download HD</a>
             </div>
-            <img 
-              src={`https://img.youtube.com/vi/${seoData.videoId}/hqdefault.jpg`} 
-              alt="Thumbnail" 
-              className="w-full max-w-md mx-auto rounded-lg shadow-lg border border-gray-600"
-            />
+            <img src={`https://img.youtube.com/vi/${seoData.videoId}/hqdefault.jpg`} alt="Thumbnail" className="w-full max-w-md mx-auto rounded-lg shadow-lg border border-gray-600" />
           </div>
 
-          {/* TITLES */}
           {seoData.titles && Object.entries(seoData.titles).map(([lang, title]) => (
             <div key={lang} className="bg-gray-800 rounded-xl p-5 border border-gray-700">
               <div className="flex justify-between items-center mb-2">
                 <h3 className="text-red-400 font-bold capitalize">{lang} Title</h3>
                 <CopyBtn text={title} field={`title-${lang}`} />
-              </div>
-              <p className="text-gray-200 text-lg">{title}</p>
+              </div>              <p className="text-gray-200 text-lg">{title}</p>
             </div>
           ))}
 
-          {/* DESCRIPTION */}
           {seoData.description && (
             <div className="bg-gray-800 rounded-xl p-5 border border-gray-700">
               <div className="flex justify-between items-center mb-2">
@@ -127,7 +110,6 @@ export default function BulkSEO() {
             </div>
           )}
 
-          {/* HASHTAGS */}
           {seoData.hashtags && (
             <div className="bg-gray-800 rounded-xl p-5 border border-gray-700">
               <div className="flex justify-between items-center mb-2">
@@ -138,17 +120,17 @@ export default function BulkSEO() {
             </div>
           )}
 
-          {/* KEYWORDS / TAGS */}
           {seoData.keywords && (
             <div className="bg-gray-800 rounded-xl p-5 border border-gray-700">
               <div className="flex justify-between items-center mb-2">
                 <h3 className="text-red-400 font-bold">🏷️ Keywords / Backend Tags</h3>
                 <CopyBtn text={seoData.keywords} field="keywords" />
               </div>
-              <p className="text-gray-300 break-all">{seoData.keywords}</p>            </div>
+              <p className="text-gray-300 break-all">{seoData.keywords}</p>
+            </div>
           )}
         </div>
       )}
     </div>
   )
-                                                                 }
+                }
