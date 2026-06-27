@@ -1,102 +1,133 @@
 import { useState, useEffect } from 'react'
 import axios from 'axios'
-import SEOCard from '../components/SEOCard'
 
 export default function AutoTrending() {
   const [trending, setTrending] = useState([])
-  const [loading, setLoading] = useState(false)
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState(null)
   const [lastUpdate, setLastUpdate] = useState(null)
-  const [autoRefresh, setAutoRefresh] = useState(true)
-  const WORKER_URL = import.meta.env.VITE_WORKER_URL
+  const WORKER_URL = import.meta.env.VITE_WORKER_URL || 'https://yt-seo-worker.aashumalik784.workers.dev'
 
-  const fetchAutoTrending = async () => {
+  const fetchTrending = async () => {
     setLoading(true)
+    setError(null)
     try {
-      const response = await axios.get(`${WORKER_URL}/api/auto-trending`)
-      setTrending(response.data.auto_trending)
-      setLastUpdate(new Date(response.data.fetched_at).toLocaleString())
+      const res = await axios.get(WORKER_URL + '/api/auto-trending')
+      if (res.data && res.data.auto_trending) {
+        setTrending(res.data.auto_trending)
+        setLastUpdate(new Date().toLocaleString())
+      } else {
+        setError('No trending data found')
+      }
     } catch (err) {
-      alert('Error: ' + err.message)
+      console.error('Trending error:', err)
+      setError(err.response?.data?.error || err.message || 'Failed to load trending')
     }
     setLoading(false)
   }
 
   useEffect(() => {
-    if (autoRefresh) {
-      fetchAutoTrending()
-      const interval = setInterval(fetchAutoTrending, 10 * 60 * 1000)
-      return () => clearInterval(interval)
-    }
-  }, [autoRefresh])
+    fetchTrending()
+  }, [])
 
   return (
     <div className="max-w-7xl mx-auto">
       <div className="flex justify-between items-center mb-6">
         <div>
           <h1 className="text-4xl font-bold mb-2">🔥 Auto-Trending SEO</h1>
-          <p className="text-gray-400">Automatically generated viral titles, hashtags, keywords</p>
+          <p className="text-gray-400">Viral titles, hashtags, keywords for trending topics</p>
         </div>
-        <div className="flex gap-3">
-          <button
-            onClick={() => setAutoRefresh(!autoRefresh)}
-            className={`px-4 py-2 rounded font-bold ${autoRefresh ? 'bg-green-600' : 'bg-gray-700'}`}
-          >
-            {autoRefresh ? '️ Auto: ON' : '▶️ Auto: OFF'}
-          </button>
-          <button
-            onClick={fetchAutoTrending}
-            disabled={loading}
-            className="bg-red-600 hover:bg-red-700 px-6 py-3 rounded font-bold disabled:opacity-50"
-          >            {loading ? '⏳ Generating...' : '🔄 Refresh Now'}
-          </button>
-        </div>
+        <button
+          onClick={fetchTrending}
+          disabled={loading}
+          className="bg-red-600 hover:bg-red-700 px-6 py-3 rounded font-bold disabled:opacity-50"
+        >
+          {loading ? 'Loading...' : '🔄 Refresh'}
+        </button>
       </div>
 
       {lastUpdate && (
-        <div className="bg-gray-800 p-4 rounded-lg mb-6 flex justify-between items-center">
-          <p className="text-gray-400">Last Auto-Update: <span className="text-white">{lastUpdate}</span></p>
-          <div className="flex items-center gap-2">
-            <div className="w-3 h-3 bg-green-500 rounded-full animate-pulse"></div>
-            <span className="text-green-400 text-sm">Live Updating</span>
-          </div>
+        <div className="bg-gray-800 p-3 rounded mb-6">          <p className="text-gray-400 text-sm">Last Update: {lastUpdate}</p>
         </div>
       )}
 
-      {loading && trending.length === 0 && (
+      {error && (
+        <div className="bg-red-900 border border-red-600 p-4 rounded-lg mb-6">
+          <p className="text-red-300 font-bold">❌ Error</p>
+          <p className="text-red-200 mt-2">{error}</p>
+          <button onClick={fetchTrending} className="mt-3 bg-red-700 px-4 py-2 rounded text-sm">
+            Try Again
+          </button>
+        </div>
+      )}
+
+      {loading && (
         <div className="text-center py-12">
-          <div className="text-6xl mb-4">🤖</div>
-          <p className="text-xl text-gray-400">AI generating viral SEO for trending topics...</p>
+          <div className="text-6xl mb-4 animate-pulse">🤖</div>
+          <p className="text-xl text-gray-400">Fetching trending topics...</p>
+          <p className="text-sm text-gray-500 mt-2">AI is generating SEO for trending videos</p>
         </div>
       )}
 
-      <div className="space-y-8">
+      {!loading && !error && trending.length === 0 && (
+        <div className="text-center py-12">
+          <div className="text-6xl mb-4">📭</div>
+          <p className="text-xl text-gray-400">No trending videos found</p>
+        </div>
+      )}
+
+      <div className="space-y-6">
         {trending.map((item, index) => (
-          <div key={item.videoId} className="bg-gray-800 rounded-lg overflow-hidden">
-            <div className="bg-gradient-to-r from-red-600 to-red-700 p-4">
+          <div key={item.videoId || index} className="bg-gray-800 rounded-lg overflow-hidden">
+            <div className="bg-gradient-to-r from-red-600 to-red-800 p-4">
               <div className="flex items-center gap-4">
                 <span className="text-3xl font-bold">#{index + 1}</span>
-                <img src={item.thumbnail} alt={item.title} className="w-32 h-20 object-cover rounded" />
+                {item.thumbnail && (
+                  <img src={item.thumbnail} alt="" className="w-32 h-20 object-cover rounded" />
+                )}
                 <div className="flex-1">
-                  <h2 className="text-2xl font-bold">{item.title}</h2>
-                  <p className="text-gray-200"> {item.category.toUpperCase()} • 👁 {item.views.toLocaleString()} views</p>
+                  <h2 className="text-xl font-bold">{item.title || 'Untitled'}</h2>
+                  <p className="text-gray-200 text-sm">👁 {item.views?.toLocaleString() || 0} views</p>
                 </div>
               </div>
             </div>
 
-            {item.seo && (
-              <div className="p-6 space-y-4">
+            {item.seo ? (
+              <div className="p-4 space-y-3">
                 <div className="grid md:grid-cols-3 gap-3">
-                  <SEOCard title="🎬 English Title" data={item.seo.viral_titles?.english} />
-                  <SEOCard title=" Hindi Title" data={item.seo.viral_titles?.hindi} />
-                  <SEOCard title="🎬 Hinglish Title" data={item.seo.viral_titles?.hinglish} />
+                  <div className="bg-gray-900 p-3 rounded">
+                    <h4 className="text-red-400 font-bold text-sm mb-1">English Title</h4>                    <p className="text-gray-300 text-sm">{item.seo.viral_titles?.english || item.seo.titles?.english || 'N/A'}</p>
+                  </div>
+                  <div className="bg-gray-900 p-3 rounded">
+                    <h4 className="text-red-400 font-bold text-sm mb-1">Hindi Title</h4>
+                    <p className="text-gray-300 text-sm">{item.seo.viral_titles?.hindi || item.seo.titles?.hindi || 'N/A'}</p>
+                  </div>
+                  <div className="bg-gray-900 p-3 rounded">
+                    <h4 className="text-red-400 font-bold text-sm mb-1">Hinglish Title</h4>
+                    <p className="text-gray-300 text-sm">{item.seo.viral_titles?.hinglish || item.seo.titles?.hinglish || 'N/A'}</p>
+                  </div>
                 </div>
-                <SEOCard title="📝 Description" data={item.seo.trending_description} />
-                <SEOCard title="#️⃣ Hashtags" data={item.seo.viral_hashtags?.join(' ')} />
-                <SEOCard title="🏷️ Keywords" data={item.seo.high_ranking_keywords} />
+                <div className="bg-gray-900 p-3 rounded">
+                  <h4 className="text-red-400 font-bold text-sm mb-1">Description</h4>
+                  <p className="text-gray-300 text-sm">{(item.seo.trending_description || item.seo.description || 'N/A').substring(0, 200)}...</p>
+                </div>
+                <div className="bg-gray-900 p-3 rounded">
+                  <h4 className="text-red-400 font-bold text-sm mb-1">Hashtags</h4>
+                  <p className="text-gray-300 text-sm">{(item.seo.viral_hashtags || item.seo.hashtags || []).join(' ')}</p>
+                </div>
+                <div className="bg-gray-900 p-3 rounded">
+                  <h4 className="text-red-400 font-bold text-sm mb-1">Keywords</h4>
+                  <p className="text-gray-300 text-sm">{item.seo.high_ranking_keywords || item.seo.keywords || 'N/A'}</p>
+                </div>
+              </div>
+            ) : (
+              <div className="p-4 bg-gray-900">
+                <p className="text-yellow-400">⚠️ SEO not generated for this video</p>
               </div>
             )}
           </div>
-        ))}      </div>
+        ))}
+      </div>
     </div>
   )
-}
+                }
