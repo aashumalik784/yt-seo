@@ -7,7 +7,7 @@ export default function BulkSEO() {
   const [seoData, setSeoData] = useState(null)
   const [error, setError] = useState(null)
   const [copied, setCopied] = useState(null)
-  const WORKER_URL = 'https://yt-seo-worker.aashumalik784.workers.dev'
+  const WORKER_URL = localStorage.getItem('workerUrl') || 'https://yt-seo-worker.aashumalik784.workers.dev'
 
   const extractVideoId = (url) => {
     const match = url.match(/(?:v=|\/)([0-9A-Za-z_-]{11})/)
@@ -17,7 +17,7 @@ export default function BulkSEO() {
   const handleGenerate = async () => {
     const videoId = extractVideoId(videoUrl)
     if (!videoId) {
-      setError('Invalid YouTube URL')
+      setError('Invalid YouTube URL. Please check and try again.')
       return
     }
     setLoading(true)
@@ -26,11 +26,11 @@ export default function BulkSEO() {
     try {
       const seoRes = await axios.post(WORKER_URL + '/api/seo', {
         topic: 'YouTube video ' + videoId,
-        language: 'hinglish'
+        language: localStorage.getItem('language') || 'hinglish'
       })
-      setSeoData(seoRes.data.data)
+      setSeoData({ ...seoRes.data.data, videoId })
     } catch (err) {
-      setError(err.response?.data?.error || 'Failed to generate SEO')
+      setError(err.response?.data?.error || 'Failed to generate SEO. Worker might be busy.')
     }
     setLoading(false)
   }
@@ -41,102 +41,114 @@ export default function BulkSEO() {
     setTimeout(() => setCopied(null), 2000)
   }
 
+  const CopyBtn = ({ text, field }) => (
+    <button
+      onClick={() => handleCopy(text, field)}
+      className="px-3 py-1 bg-gray-700 hover:bg-red-600 rounded text-xs font-bold transition flex items-center gap-1"
+    >
+      {copied === field ? '✓ Copied' : '📋 Copy'}
+    </button>  )
+
   return (
     <div className="max-w-4xl mx-auto p-4">
       <div className="text-center mb-8">
-        <h1 className="text-4xl font-bold text-white mb-2">YouTube SEO Generator</h1>
-        <p className="text-gray-400">Paste any YouTube video URL - Get viral SEO instantly</p>
-      </div>
-      <div className="bg-gray-800 rounded-lg p-6 mb-6">
-        <label className="block text-white font-bold mb-2">YouTube Video URL:</label>
-        <input
-          type="text"
-          value={videoUrl}
-          onChange={(e) => setVideoUrl(e.target.value)}
-          placeholder="https://www.youtube.com/watch?v=..."
-          className="w-full p-4 bg-gray-900 text-white rounded border border-gray-700 focus:border-red-600 outline-none mb-4"
-        />
-        {error && (
-          <div className="bg-red-900 border border-red-600 p-3 rounded mb-4">
-            <p className="text-red-400">{error}</p>
-          </div>
-        )}
-        <button
-          onClick={handleGenerate}
-          disabled={loading || !videoUrl}
-          className="w-full bg-red-600 hover:bg-red-700 text-white py-4 rounded font-bold text-lg disabled:opacity-50"
-        >
-          {loading ? 'Generating SEO...' : 'Generate SEO'}
-        </button>
+        <h1 className="text-3xl md:text-4xl font-bold text-white mb-2">🔍 YouTube SEO Search Box</h1>
+        <p className="text-gray-400">Paste any video link below to auto-generate Title, Description, Tags, Hashtags & Thumbnail</p>
       </div>
 
+      {/* SEARCH BOX */}
+      <div className="bg-gray-800 rounded-xl p-6 mb-8 shadow-lg border border-gray-700">
+        <label className="block text-white font-bold mb-3 text-lg">🔗 YouTube Video URL:</label>
+        <div className="flex flex-col sm:flex-row gap-3">
+          <input
+            type="text"
+            value={videoUrl}
+            onChange={(e) => setVideoUrl(e.target.value)}
+            placeholder="https://www.youtube.com/watch?v=..."
+            className="flex-1 p-4 bg-gray-900 text-white rounded-lg border border-gray-600 focus:border-red-600 outline-none text-lg"
+          />
+          <button
+            onClick={handleGenerate}
+            disabled={loading || !videoUrl}
+            className="bg-red-600 hover:bg-red-700 text-white px-8 py-4 rounded-lg font-bold text-lg disabled:opacity-50 disabled:cursor-not-allowed whitespace-nowrap"
+          >
+            {loading ? '⏳ Generating...' : '🚀 Generate SEO'}
+          </button>
+        </div>
+        {error && (
+          <div className="bg-red-900/30 border border-red-600 p-4 rounded-lg mt-4">
+            <p className="text-red-400 font-bold">❌ {error}</p>
+          </div>
+        )}
+      </div>
+
+      {/* RESULTS WITH COPY ICONS */}
       {seoData && (
-        <div className="space-y-4">
-          {seoData.titles && (
-            <>
-              <div className="bg-gray-800 rounded-lg p-4">
-                <div className="flex justify-between items-center mb-2">
-                  <h3 className="text-red-400 font-bold">English Title</h3>
-                  <button onClick={() => handleCopy(seoData.titles.english, 'en')} className="px-3 py-1 bg-gray-700 hover:bg-gray-600 rounded text-sm">
-                    {copied === 'en' ? 'Copied!' : 'Copy'}
-                  </button>
-                </div>
-                <p className="text-gray-300">{seoData.titles.english}</p>
+        <div className="space-y-5 animate-fade-in">
+          
+          {/* THUMBNAIL GENERATOR / PREVIEW */}
+          <div className="bg-gray-800 rounded-xl p-5 border border-gray-700">
+            <div className="flex justify-between items-center mb-3">
+              <h3 className="text-red-400 font-bold text-lg">🖼️ Thumbnail Preview</h3>
+              <a 
+                href={`https://img.youtube.com/vi/${seoData.videoId}/maxresdefault.jpg`} 
+                target="_blank" 
+                rel="noreferrer"
+                className="px-3 py-1 bg-blue-600 hover:bg-blue-700 rounded text-xs font-bold"
+              >
+                ⬇️ Download HD              </a>
+            </div>
+            <img 
+              src={`https://img.youtube.com/vi/${seoData.videoId}/hqdefault.jpg`} 
+              alt="Thumbnail" 
+              className="w-full max-w-md mx-auto rounded-lg shadow-lg border border-gray-600"
+            />
+          </div>
+
+          {/* TITLES */}
+          {seoData.titles && Object.entries(seoData.titles).map(([lang, title]) => (
+            <div key={lang} className="bg-gray-800 rounded-xl p-5 border border-gray-700">
+              <div className="flex justify-between items-center mb-2">
+                <h3 className="text-red-400 font-bold capitalize">{lang} Title</h3>
+                <CopyBtn text={title} field={`title-${lang}`} />
               </div>
-              <div className="bg-gray-800 rounded-lg p-4">
-                <div className="flex justify-between items-center mb-2">
-                  <h3 className="text-red-400 font-bold">Hindi Title</h3>
-                  <button onClick={() => handleCopy(seoData.titles.hindi, 'hi')} className="px-3 py-1 bg-gray-700 hover:bg-gray-600 rounded text-sm">
-                    {copied === 'hi' ? 'Copied!' : 'Copy'}
-                  </button>
-                </div>
-                <p className="text-gray-300">{seoData.titles.hindi}</p>
-              </div>
-              <div className="bg-gray-800 rounded-lg p-4">
-                <div className="flex justify-between items-center mb-2">
-                  <h3 className="text-red-400 font-bold">Hinglish Title</h3>
-                  <button onClick={() => handleCopy(seoData.titles.hinglish, 'hing')} className="px-3 py-1 bg-gray-700 hover:bg-gray-600 rounded text-sm">
-                    {copied === 'hing' ? 'Copied!' : 'Copy'}                  </button>
-                </div>
-                <p className="text-gray-300">{seoData.titles.hinglish}</p>
-              </div>
-            </>
-          )}
+              <p className="text-gray-200 text-lg">{title}</p>
+            </div>
+          ))}
+
+          {/* DESCRIPTION */}
           {seoData.description && (
-            <div className="bg-gray-800 rounded-lg p-4">
+            <div className="bg-gray-800 rounded-xl p-5 border border-gray-700">
               <div className="flex justify-between items-center mb-2">
-                <h3 className="text-red-400 font-bold">Description</h3>
-                <button onClick={() => handleCopy(seoData.description, 'desc')} className="px-3 py-1 bg-gray-700 hover:bg-gray-600 rounded text-sm">
-                  {copied === 'desc' ? 'Copied!' : 'Copy'}
-                </button>
+                <h3 className="text-red-400 font-bold">📝 Description</h3>
+                <CopyBtn text={seoData.description} field="desc" />
               </div>
-              <p className="text-gray-300 text-sm whitespace-pre-wrap">{seoData.description}</p>
+              <p className="text-gray-300 whitespace-pre-wrap leading-relaxed">{seoData.description}</p>
             </div>
           )}
+
+          {/* HASHTAGS */}
           {seoData.hashtags && (
-            <div className="bg-gray-800 rounded-lg p-4">
+            <div className="bg-gray-800 rounded-xl p-5 border border-gray-700">
               <div className="flex justify-between items-center mb-2">
-                <h3 className="text-red-400 font-bold">Hashtags</h3>
-                <button onClick={() => handleCopy(seoData.hashtags.join(' '), 'tags')} className="px-3 py-1 bg-gray-700 hover:bg-gray-600 rounded text-sm">
-                  {copied === 'tags' ? 'Copied!' : 'Copy'}
-                </button>
+                <h3 className="text-red-400 font-bold">#️⃣ Hashtags</h3>
+                <CopyBtn text={seoData.hashtags.join(' ')} field="hashtags" />
               </div>
-              <p className="text-gray-300 text-sm">{seoData.hashtags.join(' ')}</p>
+              <p className="text-blue-400 break-all">{seoData.hashtags.join(' ')}</p>
             </div>
           )}
+
+          {/* KEYWORDS / TAGS */}
           {seoData.keywords && (
-            <div className="bg-gray-800 rounded-lg p-4">
+            <div className="bg-gray-800 rounded-xl p-5 border border-gray-700">
               <div className="flex justify-between items-center mb-2">
-                <h3 className="text-red-400 font-bold">Keywords / Tags</h3>
-                <button onClick={() => handleCopy(seoData.keywords, 'kw')} className="px-3 py-1 bg-gray-700 hover:bg-gray-600 rounded text-sm">
-                  {copied === 'kw' ? 'Copied!' : 'Copy'}
-                </button>
+                <h3 className="text-red-400 font-bold">🏷️ Keywords / Backend Tags</h3>
+                <CopyBtn text={seoData.keywords} field="keywords" />
               </div>
-              <p className="text-gray-300 text-sm">{seoData.keywords}</p>
-            </div>
+              <p className="text-gray-300 break-all">{seoData.keywords}</p>            </div>
           )}
         </div>
       )}
     </div>
   )
-                  }
+                                                                 }
