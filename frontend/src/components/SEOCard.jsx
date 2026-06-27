@@ -14,7 +14,7 @@ export default function SEOCard({ title, data }) {
   return (
     <div className="bg-gray-800 rounded-lg p-4">
       <div className="flex justify-between items-center mb-2">
-        <h3 className="text-lg font-bold text-ytred">{title}</h3>
+        <h3 className="text-lg font-bold text-red-600">{title}</h3>
         <button
           onClick={handleCopy}
           disabled={!data}
