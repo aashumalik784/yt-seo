@@ -3,9 +3,9 @@ import { Link } from 'react-router-dom'
 export default function Home() {
   const features = [
     { icon: '🤖', title: 'AI SEO Generator', desc: 'Generate viral titles, descriptions, tags in Hindi/English/Hinglish', link: '/seo' },
-    { icon: '📈', title: 'Live Analytics', desc: 'Track your video views & likes in real-time with beautiful graphs', link: '/analytics' },
-    { icon: '🔥', title: 'Trending Topics', desc: 'Get suggestions on what to upload next based on trends', link: '/dashboard' },
-    { icon: '🎯', title: 'SEO Score', desc: 'Check how optimized your video is before uploading', link: '/dashboard' }
+    { icon: '📺', title: 'My Channel', desc: 'Auto-SEO for all your channel videos with analytics graphs', link: '/my-channel' },
+    { icon: '🔥', title: 'Auto-Trending', desc: 'Trending topics ka automatic SEO (News excluded)', link: '/auto-trending' },
+    { icon: '📈', title: 'Live Analytics', desc: 'Track your video views & likes in real-time', link: '/analytics' }
   ]
 
   return (
@@ -31,8 +31,8 @@ export default function Home() {
 
       <div className="bg-gradient-to-r from-ytred to-ytgray rounded-lg p-8 text-center">
         <h2 className="text-3xl font-bold mb-4">Ready to Boost Your Channel?</h2>
-        <Link to="/seo" className="inline-block bg-white text-ytred px-8 py-3 rounded-full font-bold hover:bg-gray-200 transition">
-          Start Generating SEO →
+        <Link to="/my-channel" className="inline-block bg-white text-ytred px-8 py-3 rounded-full font-bold hover:bg-gray-200 transition">
+          View My Channel →
         </Link>
       </div>
     </div>
