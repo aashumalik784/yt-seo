@@ -77,15 +77,15 @@ export default function LiveGraph({ videoId }) {
     <div>
       {latest && (
         <div className="grid grid-cols-3 gap-4 mb-6">
-          <div className="bg-ytgray p-4 rounded-lg text-center">
+          <div className="bg-gray-800 p-4 rounded-lg text-center">
             <div className="text-gray-400 text-sm">Views</div>
-            <div className="text-3xl font-bold text-ytred">{latest.views?.toLocaleString()}</div>
+            <div className="text-3xl font-bold text-red-600">{latest.views?.toLocaleString()}</div>
           </div>
-          <div className="bg-ytgray p-4 rounded-lg text-center">
+          <div className="bg-gray-800 p-4 rounded-lg text-center">
             <div className="text-gray-400 text-sm">Likes</div>
             <div className="text-3xl font-bold text-green-500">{latest.likes?.toLocaleString()}</div>
           </div>
-          <div className="bg-ytgray p-4 rounded-lg text-center">
+          <div className="bg-gray-800 p-4 rounded-lg text-center">
             <div className="text-gray-400 text-sm">Comments</div>
             <div className="text-3xl font-bold text-blue-500">{latest.comments?.toLocaleString()}</div>
           </div>
