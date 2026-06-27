@@ -1,4 +1,6 @@
-import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom'
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
+import Navbar from './components/Navbar'
+import Footer from './components/Footer'
 import Home from './pages/Home'
 import SEOGenerator from './pages/SEOGenerator'
 import LiveAnalytics from './pages/LiveAnalytics'
@@ -8,31 +10,9 @@ import AutoTrending from './pages/AutoTrending'
 function App() {
   return (
     <Router>
-      <div className="min-h-screen bg-black">
-        {/* Navigation Menu */}
-        <nav className="bg-gray-900 border-b border-gray-800 p-4">
-          <div className="container mx-auto">
-            <div className="flex items-center justify-between">
-              <Link to="/" className="flex items-center space-x-2">
-                <div className="w-10 h-10 bg-red-600 rounded-full flex items-center justify-center">
-                  <span className="text-white text-xl">▶</span>
-                </div>
-                <span className="text-white text-xl font-bold">YT SEO AI</span>
-              </Link>
-              
-              <div className="hidden md:flex space-x-6">
-                <Link to="/" className="text-gray-300 hover:text-white">Home</Link>
-                <Link to="/seo" className="text-gray-300 hover:text-white">AI SEO</Link>
-                <Link to="/my-channel" className="text-gray-300 hover:text-white">My Channel</Link>
-                <Link to="/auto-trending" className="text-gray-300 hover:text-white">Trending</Link>
-                <Link to="/analytics" className="text-gray-300 hover:text-white">Analytics</Link>
-              </div>
-            </div>
-          </div>
-        </nav>
-
-        {/* Main Content */}
-        <main className="container mx-auto p-4">
+      <div className="min-h-screen flex flex-col bg-gray-950 text-white">
+        <Navbar />
+        <main className="flex-grow container mx-auto px-4 py-8">
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/seo" element={<SEOGenerator />} />
@@ -41,13 +21,7 @@ function App() {
             <Route path="/auto-trending" element={<AutoTrending />} />
           </Routes>
         </main>
-
-        {/* Footer */}
-        <footer className="bg-gray-900 border-t border-gray-800 p-6 mt-12">
-          <div className="container mx-auto text-center text-gray-400">
-            <p>© 2026 YouTube SEO AI Booster. All rights reserved.</p>
-          </div>
-        </footer>
+        <Footer />
       </div>
     </Router>
   )
