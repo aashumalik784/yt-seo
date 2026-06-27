@@ -34,7 +34,7 @@ export default function AutoTrending() {
       <div className="flex justify-between items-center mb-6">
         <div>
           <h1 className="text-4xl font-bold mb-2">🔥 Auto-Trending SEO</h1>
-          <p className="text-gray-400">Automatically generated viral titles, hashtags, keywords & descriptions</p>
+          <p className="text-gray-400">Automatically generated viral titles, hashtags, keywords</p>
         </div>
         <div className="flex gap-3">
           <button
@@ -66,7 +66,6 @@ export default function AutoTrending() {
         <div className="text-center py-12">
           <div className="text-6xl mb-4">🤖</div>
           <p className="text-xl text-gray-400">AI generating viral SEO for trending topics...</p>
-          <p className="text-sm text-gray-500 mt-2">Yeh 1-2 minute le sakta hai</p>
         </div>
       )}
 
@@ -80,37 +79,24 @@ export default function AutoTrending() {
                 <div className="flex-1">
                   <h2 className="text-2xl font-bold">{item.title}</h2>
                   <p className="text-gray-200">📺 {item.category.toUpperCase()} • 👁 {item.views.toLocaleString()} views</p>
-                  <p className="text-sm text-gray-300">Rank: Trending #{item.trending_rank}</p>
                 </div>
               </div>
             </div>
 
-            {item.seo ? (
+            {item.seo && (
               <div className="p-6 space-y-4">
                 <div className="grid md:grid-cols-3 gap-3">
-                  <SEOCard title="🎬 English Viral Title" data={item.seo.viral_titles?.english} />
-                  <SEOCard title="🎬 Hindi Viral Title" data={item.seo.viral_titles?.hindi} />
-                  <SEOCard title="🎬 Hinglish Viral Title" data={item.seo.viral_titles?.hinglish} />
+                  <SEOCard title="🎬 English Title" data={item.seo.viral_titles?.english} />
+                  <SEOCard title="🎬 Hindi Title" data={item.seo.viral_titles?.hindi} />
+                  <SEOCard title="🎬 Hinglish Title" data={item.seo.viral_titles?.hinglish} />
                 </div>
-                <SEOCard title="📝 Trending Description" data={item.seo.trending_description} />
-                <SEOCard title="#️⃣ Viral Hashtags" data={item.seo.viral_hashtags?.join(' ')} />
-                <SEOCard title="🏷️ High-Ranking Keywords" data={item.seo.high_ranking_keywords} />
-                <div className="grid md:grid-cols-2 gap-4">
-                  <SEOCard title="🎯 Suggested Tags" data={item.seo.suggested_tags?.join(', ')} />                  <div className="bg-gray-800 p-4 rounded">
-                    <h3 className="text-lg font-bold mb-2">📊 Additional Info</h3>
-                    <p className="text-gray-400">⏰ Best Time: {item.seo.best_posting_time}</p>
-                    <p className="text-gray-400">👥 Target: {item.seo.target_audience}</p>
-                  </div>
-                </div>
-              </div>
-            ) : (
-              <div className="p-6 bg-red-900/20">
-                <p className="text-red-400">❌ SEO generation failed: {item.seoError}</p>
+                <SEOCard title="📝 Description" data={item.seo.trending_description} />
+                <SEOCard title="#️⃣ Hashtags" data={item.seo.viral_hashtags?.join(' ')} />
+                <SEOCard title="🏷️ Keywords" data={item.seo.high_ranking_keywords} />
               </div>
             )}
           </div>
-        ))}
-      </div>
+        ))}      </div>
     </div>
   )
-      }
+}
