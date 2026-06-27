@@ -29,14 +29,14 @@ export default function LiveAnalytics() {
     <div className="max-w-5xl mx-auto">
       <h1 className="text-4xl font-bold mb-6">📈 Live Video Analytics</h1>
 
-      <div className="bg-ytgray rounded-lg p-6 mb-6">
+      <div className="bg-gray-800 rounded-lg p-6 mb-6">
         <label className="block mb-2 font-bold">YouTube Video URL:</label>
         <input
           type="text"
           value={videoUrl}
           onChange={(e) => setVideoUrl(e.target.value)}
           placeholder="https://www.youtube.com/watch?v=..."
-          className="w-full p-3 bg-gray-800 rounded border border-gray-700 focus:border-ytred outline-none"
+          className="w-full p-3 bg-gray-900 rounded border border-gray-700 focus:border-red-600 outline-none"
         />
         {error && <p className="text-red-400 mt-2">❌ {error}</p>}
         
