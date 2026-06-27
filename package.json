@@ -1,0 +1,16 @@
+{
+  "name": "yt-seo-ai",
+  "version": "1.0.0",
+  "description": "AI-powered YouTube SEO tool",
+  "private": true,
+  "scripts": {
+    "dev:frontend": "cd frontend && npm run dev",
+    "dev:worker": "cd worker && npx wrangler dev",
+    "build:frontend": "cd frontend && npm run build",
+    "deploy:worker": "cd worker && npx wrangler deploy",
+    "install:all": "npm install && cd frontend && npm install && cd ../worker && npm install"
+  },
+  "keywords": ["youtube", "seo", "ai", "cloudflare"],
+  "author": "Your Name",
+  "license": "MIT"
+}
