@@ -20,26 +20,15 @@ export default function BulkSEO() {
       setError('Invalid YouTube URL')
       return
     }
-
     setLoading(true)
     setError(null)
     setSeoData(null)
-
     try {
-      // Video details fetch karo
-      const detailsRes = await axios.post(WORKER_URL + '/api/video-details', { videoId })
-      
-      // SEO generate karo
       const seoRes = await axios.post(WORKER_URL + '/api/seo', {
-        topic: detailsRes.data.details.title,
+        topic: 'YouTube video ' + videoId,
         language: 'hinglish'
       })
-
-      setSeoData({
-        title: detailsRes.data.details.title,
-        views: detailsRes.data.details.views,
-        ...seoRes.data.data
-      })
+      setSeoData(seoRes.data.data)
     } catch (err) {
       setError(err.response?.data?.error || 'Failed to generate SEO')
     }
@@ -47,19 +36,17 @@ export default function BulkSEO() {
   }
 
   const handleCopy = (text, field) => {
-    navigator.clipboard.writeText(text)    setCopied(field)
+    navigator.clipboard.writeText(text)
+    setCopied(field)
     setTimeout(() => setCopied(null), 2000)
   }
 
   return (
     <div className="max-w-4xl mx-auto p-4">
-      {/* Header */}
       <div className="text-center mb-8">
-        <h1 className="text-4xl font-bold text-white mb-2">🎯 YouTube SEO Generator</h1>
+        <h1 className="text-4xl font-bold text-white mb-2">YouTube SEO Generator</h1>
         <p className="text-gray-400">Paste any YouTube video URL - Get viral SEO instantly</p>
       </div>
-
-      {/* Input Box */}
       <div className="bg-gray-800 rounded-lg p-6 mb-6">
         <label className="block text-white font-bold mb-2">YouTube Video URL:</label>
         <input
@@ -69,115 +56,80 @@ export default function BulkSEO() {
           placeholder="https://www.youtube.com/watch?v=..."
           className="w-full p-4 bg-gray-900 text-white rounded border border-gray-700 focus:border-red-600 outline-none mb-4"
         />
-        
         {error && (
-          <div className="bg-red-900/20 border border-red-600 p-3 rounded mb-4">
-            <p className="text-red-400">❌ {error}</p>
+          <div className="bg-red-900 border border-red-600 p-3 rounded mb-4">
+            <p className="text-red-400">{error}</p>
           </div>
         )}
-
         <button
           onClick={handleGenerate}
           disabled={loading || !videoUrl}
           className="w-full bg-red-600 hover:bg-red-700 text-white py-4 rounded font-bold text-lg disabled:opacity-50"
         >
-          {loading ? '⏳ Generating SEO...' : '🚀 Generate SEO'}
+          {loading ? 'Generating SEO...' : 'Generate SEO'}
         </button>
       </div>
 
-      {/* Results */}
       {seoData && (
         <div className="space-y-4">
-          <div className="bg-gray-800 rounded-lg p-4">
-            <h3 className="text-red-400 font-bold mb-2">📹 Video Title</h3>
-            <p className="text-gray-300">{seoData.title}</p>
-            <p className="text-sm text-gray-500 mt-1">👁 {seoData.views?.toLocaleString()} views</p>
-          </div>
-
-          {/* Titles */}
           {seoData.titles && (
-            <>              <div className="bg-gray-800 rounded-lg p-4">
+            <>
+              <div className="bg-gray-800 rounded-lg p-4">
                 <div className="flex justify-between items-center mb-2">
-                  <h3 className="text-red-400 font-bold">🎬 English Title</h3>
-                  <button
-                    onClick={() => handleCopy(seoData.titles.english, 'title-en')}
-                    className="px-3 py-1 bg-gray-700 hover:bg-gray-600 rounded text-sm"
-                  >
-                    {copied === 'title-en' ? '✓ Copied' : '📋 Copy'}
+                  <h3 className="text-red-400 font-bold">English Title</h3>
+                  <button onClick={() => handleCopy(seoData.titles.english, 'en')} className="px-3 py-1 bg-gray-700 hover:bg-gray-600 rounded text-sm">
+                    {copied === 'en' ? 'Copied!' : 'Copy'}
                   </button>
                 </div>
                 <p className="text-gray-300">{seoData.titles.english}</p>
               </div>
-
               <div className="bg-gray-800 rounded-lg p-4">
                 <div className="flex justify-between items-center mb-2">
-                  <h3 className="text-red-400 font-bold">🎬 Hindi Title</h3>
-                  <button
-                    onClick={() => handleCopy(seoData.titles.hindi, 'title-hi')}
-                    className="px-3 py-1 bg-gray-700 hover:bg-gray-600 rounded text-sm"
-                  >
-                    {copied === 'title-hi' ? '✓ Copied' : '📋 Copy'}
+                  <h3 className="text-red-400 font-bold">Hindi Title</h3>
+                  <button onClick={() => handleCopy(seoData.titles.hindi, 'hi')} className="px-3 py-1 bg-gray-700 hover:bg-gray-600 rounded text-sm">
+                    {copied === 'hi' ? 'Copied!' : 'Copy'}
                   </button>
                 </div>
                 <p className="text-gray-300">{seoData.titles.hindi}</p>
               </div>
-
               <div className="bg-gray-800 rounded-lg p-4">
                 <div className="flex justify-between items-center mb-2">
-                  <h3 className="text-red-400 font-bold">🎬 Hinglish Title</h3>
-                  <button
-                    onClick={() => handleCopy(seoData.titles.hinglish, 'title-hing')}
-                    className="px-3 py-1 bg-gray-700 hover:bg-gray-600 rounded text-sm"
-                  >
-                    {copied === 'title-hing' ? '✓ Copied' : '📋 Copy'}
-                  </button>
+                  <h3 className="text-red-400 font-bold">Hinglish Title</h3>
+                  <button onClick={() => handleCopy(seoData.titles.hinglish, 'hing')} className="px-3 py-1 bg-gray-700 hover:bg-gray-600 rounded text-sm">
+                    {copied === 'hing' ? 'Copied!' : 'Copy'}                  </button>
                 </div>
                 <p className="text-gray-300">{seoData.titles.hinglish}</p>
               </div>
             </>
           )}
-
-          {/* Description */}
           {seoData.description && (
             <div className="bg-gray-800 rounded-lg p-4">
               <div className="flex justify-between items-center mb-2">
-                <h3 className="text-red-400 font-bold">📝 Description</h3>
-                <button
-                  onClick={() => handleCopy(seoData.description, 'desc')}
-                  className="px-3 py-1 bg-gray-700 hover:bg-gray-600 rounded text-sm"
-                >                  {copied === 'desc' ? '✓ Copied' : '📋 Copy'}
+                <h3 className="text-red-400 font-bold">Description</h3>
+                <button onClick={() => handleCopy(seoData.description, 'desc')} className="px-3 py-1 bg-gray-700 hover:bg-gray-600 rounded text-sm">
+                  {copied === 'desc' ? 'Copied!' : 'Copy'}
                 </button>
               </div>
               <p className="text-gray-300 text-sm whitespace-pre-wrap">{seoData.description}</p>
             </div>
           )}
-
-          {/* Hashtags */}
           {seoData.hashtags && (
             <div className="bg-gray-800 rounded-lg p-4">
               <div className="flex justify-between items-center mb-2">
-                <h3 className="text-red-400 font-bold">#️⃣ Hashtags</h3>
-                <button
-                  onClick={() => handleCopy(seoData.hashtags.join(' '), 'tags')}
-                  className="px-3 py-1 bg-gray-700 hover:bg-gray-600 rounded text-sm"
-                >
-                  {copied === 'tags' ? '✓ Copied' : '📋 Copy'}
+                <h3 className="text-red-400 font-bold">Hashtags</h3>
+                <button onClick={() => handleCopy(seoData.hashtags.join(' '), 'tags')} className="px-3 py-1 bg-gray-700 hover:bg-gray-600 rounded text-sm">
+                  {copied === 'tags' ? 'Copied!' : 'Copy'}
                 </button>
               </div>
               <p className="text-gray-300 text-sm">{seoData.hashtags.join(' ')}</p>
             </div>
           )}
-
-          {/* Keywords */}
           {seoData.keywords && (
             <div className="bg-gray-800 rounded-lg p-4">
               <div className="flex justify-between items-center mb-2">
-                <h3 className="text-red-400 font-bold">🏷️ Keywords/Tags</h3>
-                <button
-                  onClick={() => handleCopy(seoData.keywords, 'keywords')}
-                  className="px-3 py-1 bg-gray-700 hover:bg-gray-600 rounded text-sm"
-                >
-                  {copied === 'keywords' ? '✓ Copied' : '📋 Copy'}
+                <h3 className="text-red-400 font-bold">Keywords / Tags</h3>
+                <button onClick={() => handleCopy(seoData.keywords, 'kw')} className="px-3 py-1 bg-gray-700 hover:bg-gray-600 rounded text-sm">
+                  {copied === 'kw' ? 'Copied!' : 'Copy'}
                 </button>
               </div>
               <p className="text-gray-300 text-sm">{seoData.keywords}</p>
@@ -187,4 +139,4 @@ export default function BulkSEO() {
       )}
     </div>
   )
-}
+                  }
