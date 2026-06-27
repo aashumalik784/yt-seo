@@ -41,19 +41,19 @@ export default function AutoTrending() {
             onClick={() => setAutoRefresh(!autoRefresh)}
             className={`px-4 py-2 rounded font-bold ${autoRefresh ? 'bg-green-600' : 'bg-gray-700'}`}
           >
-            {autoRefresh ? '⏸️ Auto: ON' : '▶️ Auto: OFF'}
+            {autoRefresh ? '️ Auto: ON' : '▶️ Auto: OFF'}
           </button>
           <button
             onClick={fetchAutoTrending}
             disabled={loading}
-            className="bg-ytred hover:bg-red-700 px-6 py-3 rounded font-bold disabled:opacity-50"
+            className="bg-red-600 hover:bg-red-700 px-6 py-3 rounded font-bold disabled:opacity-50"
           >            {loading ? '⏳ Generating...' : '🔄 Refresh Now'}
           </button>
         </div>
       </div>
 
       {lastUpdate && (
-        <div className="bg-ytgray p-4 rounded-lg mb-6 flex justify-between items-center">
+        <div className="bg-gray-800 p-4 rounded-lg mb-6 flex justify-between items-center">
           <p className="text-gray-400">Last Auto-Update: <span className="text-white">{lastUpdate}</span></p>
           <div className="flex items-center gap-2">
             <div className="w-3 h-3 bg-green-500 rounded-full animate-pulse"></div>
@@ -71,14 +71,14 @@ export default function AutoTrending() {
 
       <div className="space-y-8">
         {trending.map((item, index) => (
-          <div key={item.videoId} className="bg-ytgray rounded-lg overflow-hidden">
-            <div className="bg-gradient-to-r from-ytred to-red-700 p-4">
+          <div key={item.videoId} className="bg-gray-800 rounded-lg overflow-hidden">
+            <div className="bg-gradient-to-r from-red-600 to-red-700 p-4">
               <div className="flex items-center gap-4">
                 <span className="text-3xl font-bold">#{index + 1}</span>
-                <img src={item.thumbnail} alt={item.title} className="w-32 h-18 object-cover rounded" />
+                <img src={item.thumbnail} alt={item.title} className="w-32 h-20 object-cover rounded" />
                 <div className="flex-1">
                   <h2 className="text-2xl font-bold">{item.title}</h2>
-                  <p className="text-gray-200">📺 {item.category.toUpperCase()} • 👁 {item.views.toLocaleString()} views</p>
+                  <p className="text-gray-200"> {item.category.toUpperCase()} • 👁 {item.views.toLocaleString()} views</p>
                 </div>
               </div>
             </div>
@@ -87,7 +87,7 @@ export default function AutoTrending() {
               <div className="p-6 space-y-4">
                 <div className="grid md:grid-cols-3 gap-3">
                   <SEOCard title="🎬 English Title" data={item.seo.viral_titles?.english} />
-                  <SEOCard title="🎬 Hindi Title" data={item.seo.viral_titles?.hindi} />
+                  <SEOCard title=" Hindi Title" data={item.seo.viral_titles?.hindi} />
                   <SEOCard title="🎬 Hinglish Title" data={item.seo.viral_titles?.hinglish} />
                 </div>
                 <SEOCard title="📝 Description" data={item.seo.trending_description} />
