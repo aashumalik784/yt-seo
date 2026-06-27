@@ -10,7 +10,6 @@ function App() {
   return (
     <Router>
       <div className="min-h-screen bg-gray-950 text-white">
-        {/* Navigation Menu */}
         <nav className="bg-gray-900 border-b border-gray-800 sticky top-0 z-50">
           <div className="container mx-auto px-4">
             <div className="flex items-center justify-between h-16">
@@ -33,7 +32,6 @@ function App() {
           </div>
         </nav>
 
-        {/* Main Content */}
         <main className="container mx-auto px-4 py-8">
           <Routes>
             <Route path="/" element={<Home />} />
@@ -45,7 +43,6 @@ function App() {
           </Routes>
         </main>
 
-        {/* Footer */}
         <footer className="bg-gray-900 border-t border-gray-800 py-6 mt-12">
           <div className="container mx-auto text-center text-gray-400">
             <p>© 2026 YouTube SEO AI Booster</p>
