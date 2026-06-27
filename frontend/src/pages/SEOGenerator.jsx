@@ -1,6 +1,5 @@
 import { useState } from 'react'
-import { generateSEO } from '../services/aiService'
-import { isValidTopic } from '../utils/validators'
+import axios from 'axios'
 import SEOCard from '../components/SEOCard'
 
 export default function SEOGenerator() {
@@ -9,19 +8,23 @@ export default function SEOGenerator() {
   const [seoData, setSeoData] = useState(null)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState(null)
+  const WORKER_URL = import.meta.env.VITE_WORKER_URL
 
   const handleGenerate = async () => {
-    if (!isValidTopic(topic)) {
+    if (!topic || topic.trim().length < 3) {
       setError('Topic kam se kam 3 characters ka hona chahiye')
       return
     }
     setLoading(true)
     setError(null)
     try {
-      const data = await generateSEO(topic, language)
-      setSeoData(data)
+      const response = await axios.post(`${WORKER_URL}/api/seo`, {
+        topic: topic.trim(),
+        language
+      })
+      setSeoData(response.data.data)
     } catch (err) {
-      setError(err.message)
+      setError(err.response?.data?.error || err.message)
     } finally {
       setLoading(false)
     }
