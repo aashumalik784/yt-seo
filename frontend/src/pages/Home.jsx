@@ -2,11 +2,11 @@ import { Link } from 'react-router-dom'
 
 export default function Home() {
   const features = [
-    { icon: '1', title: 'Bulk SEO Generator', desc: 'Paste any YouTube URL - Get instant SEO (Titles, Tags, Description)', link: '/bulk-seo' },
-    { icon: '2', title: 'AI SEO Generator', desc: 'Generate viral titles, descriptions, tags in Hindi/English/Hinglish', link: '/seo' },
-    { icon: '3', title: 'My Channel', desc: 'Auto-SEO for all your channel videos', link: '/my-channel' },
-    { icon: '4', title: 'Auto-Trending', desc: 'Trending topics ka automatic SEO', link: '/auto-trending' },
-    { icon: '5', title: 'Live Analytics', desc: 'Track your video views & likes in real-time', link: '/analytics' }
+    { icon: '🎯', title: 'Bulk SEO Generator', desc: 'Paste any YouTube URL - Get instant SEO', link: '/bulk-seo' },
+    { icon: '🤖', title: 'AI SEO Generator', desc: 'Generate viral titles, descriptions, tags', link: '/seo' },
+    { icon: '📺', title: 'My Channel', desc: 'Auto-SEO for all your channel videos', link: '/my-channel' },
+    { icon: '🔥', title: 'Auto-Trending', desc: 'Trending topics ka automatic SEO', link: '/auto-trending' },
+    { icon: '📈', title: 'Live Analytics', desc: 'Track your video views and likes', link: '/analytics' }
   ]
 
   return (
@@ -23,7 +23,7 @@ export default function Home() {
       <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
         {features.map((f, i) => (
           <Link key={i} to={f.link} className="bg-gray-800 p-6 rounded-lg hover:bg-gray-700 transition block">
-            <div className="text-4xl mb-3 text-red-600 font-bold">{f.icon}</div>
+            <div className="text-4xl mb-3">{f.icon}</div>
             <h3 className="text-xl font-bold mb-2">{f.title}</h3>
             <p className="text-gray-400 text-sm">{f.desc}</p>
           </Link>
