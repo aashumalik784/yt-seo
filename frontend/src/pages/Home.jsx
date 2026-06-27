@@ -1,30 +1,40 @@
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
-import Navbar from './components/Navbar'
-import Footer from './components/Footer'
-import Home from './pages/Home'
-import SEOGenerator from './pages/SEOGenerator'
-import LiveAnalytics from './pages/LiveAnalytics'
-import ChannelDashboard from './pages/ChannelDashboard'
-import AutoTrending from './pages/AutoTrending'
+import { Link } from 'react-router-dom'
 
-function App() {
+export default function Home() {
+  const features = [
+    { icon: '🤖', title: 'AI SEO Generator', desc: 'Generate viral titles, descriptions, tags in Hindi/English/Hinglish', link: '/seo' },
+    { icon: '📺', title: 'My Channel', desc: 'Auto-SEO for all your channel videos with analytics graphs', link: '/my-channel' },
+    { icon: '🔥', title: 'Auto-Trending', desc: 'Trending topics ka automatic SEO (News excluded)', link: '/auto-trending' },
+    { icon: '', title: 'Live Analytics', desc: 'Track your video views & likes in real-time', link: '/analytics' }
+  ]
+
   return (
-    <Router>
-      <div className="min-h-screen flex flex-col bg-gray-950 text-white">
-        <Navbar />
-        <main className="flex-grow container mx-auto px-4 py-8">
-          <Routes>
-            <Route path="/" element={<Home />} />
-            <Route path="/seo" element={<SEOGenerator />} />
-            <Route path="/analytics" element={<LiveAnalytics />} />
-            <Route path="/my-channel" element={<ChannelDashboard />} />
-            <Route path="/auto-trending" element={<AutoTrending />} />
-          </Routes>
-        </main>
-        <Footer />
+    <div className="py-12">
+      <div className="text-center mb-12">
+        <h1 className="text-5xl font-bold mb-4">
+          <span className="text-red-600">YouTube SEO</span> AI Booster
+        </h1>
+        <p className="text-xl text-gray-300 max-w-2xl mx-auto">
+          Apni videos ko organic tarike se boost karein AI-powered SEO tools ke saath
+        </p>
       </div>
-    </Router>
+
+      <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
+        {features.map((f, i) => (
+          <Link key={i} to={f.link} className="bg-gray-800 p-6 rounded-lg hover:bg-gray-700 transition block">
+            <div className="text-4xl mb-3">{f.icon}</div>
+            <h3 className="text-xl font-bold mb-2">{f.title}</h3>
+            <p className="text-gray-400 text-sm">{f.desc}</p>
+          </Link>
+        ))}
+      </div>
+
+      <div className="bg-gradient-to-r from-red-600 to-gray-800 rounded-lg p-8 text-center">
+        <h2 className="text-3xl font-bold mb-4">Ready to Boost Your Channel?</h2>
+        <Link to="/my-channel" className="inline-block bg-white text-red-600 px-8 py-3 rounded-full font-bold hover:bg-gray-200 transition">
+          View My Channel →
+        </Link>
+      </div>
+    </div>
   )
 }
-
-export default App
