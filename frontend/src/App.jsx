@@ -4,7 +4,6 @@ import SEOGenerator from './pages/SEOGenerator'
 import LiveAnalytics from './pages/LiveAnalytics'
 import ChannelDashboard from './pages/ChannelDashboard'
 import AutoTrending from './pages/AutoTrending'
-import BulkSEO from './pages/BulkSEO'
 
 function App() {
   return (
@@ -22,7 +21,6 @@ function App() {
               
               <div className="hidden md:flex space-x-6">
                 <Link to="/" className="text-gray-300 hover:text-white">Home</Link>
-                <Link to="/bulk-seo" className="text-gray-300 hover:text-white">Bulk SEO</Link>
                 <Link to="/seo" className="text-gray-300 hover:text-white">AI SEO</Link>
                 <Link to="/my-channel" className="text-gray-300 hover:text-white">My Channel</Link>
                 <Link to="/auto-trending" className="text-gray-300 hover:text-white">Trending</Link>
@@ -36,7 +34,6 @@ function App() {
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/seo" element={<SEOGenerator />} />
-            <Route path="/bulk-seo" element={<BulkSEO />} />
             <Route path="/analytics" element={<LiveAnalytics />} />
             <Route path="/my-channel" element={<ChannelDashboard />} />
             <Route path="/auto-trending" element={<AutoTrending />} />
