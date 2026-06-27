@@ -1,35 +1,36 @@
 # Dependencies
-node_modules
+node_modules/
 .pnp
 .pnp.js
 
-# Production
-dist
-build
-out
-
-# Env files
+# Environment variables (SECRETS)
 .env
 .env.local
-.env.development.local
-.env.test.local
-.env.production.local
+.env.*.local
 .dev.vars
+worker/.dev.vars
+frontend/.env
+
+# Build output
+dist/
+build/
+.wrangler/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+
+# OS files
+.DS_Store
+Thumbs.db
 
 # Logs
+*.log
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 
-# Editor
-.vscode
-.idea
-*.swp
-*.swo
-
-# OS
-.DS_Store
-Thumbs.db
-
-# Wrangler
-.wrangler
+# Misc
+.cache/
+coverage/
