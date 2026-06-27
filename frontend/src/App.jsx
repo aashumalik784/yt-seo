@@ -16,14 +16,14 @@ function App() {
             <div className="flex items-center justify-between h-16">
               <Link to="/" className="flex items-center space-x-2">
                 <div className="w-10 h-10 bg-red-600 rounded-full flex items-center justify-center">
-                  <span className="text-white font-bold">▶</span>
+                  <span className="text-white font-bold">YT</span>
                 </div>
                 <span className="text-xl font-bold">YT SEO AI</span>
               </Link>
               
               <div className="hidden md:flex space-x-6">
                 <Link to="/" className="text-gray-300 hover:text-white">Home</Link>
-                <Link to="/bulk-seo" className="text-gray-300 hover:text-white">🎯 Bulk SEO</Link>
+                <Link to="/bulk-seo" className="text-gray-300 hover:text-white">Bulk SEO</Link>
                 <Link to="/seo" className="text-gray-300 hover:text-white">AI SEO</Link>
                 <Link to="/my-channel" className="text-gray-300 hover:text-white">My Channel</Link>
                 <Link to="/auto-trending" className="text-gray-300 hover:text-white">Trending</Link>
