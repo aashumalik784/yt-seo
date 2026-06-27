@@ -1,34 +1,31 @@
 import { useState } from 'react'
+import axios from 'axios'
 import LiveGraph from '../components/LiveGraph'
-import { useYouTubeData } from '../hooks/useYouTubeData'
-import { extractVideoId, isValidYouTubeUrl } from '../utils/validators'
-import { formatNumber } from '../utils/formatters'
 
 export default function LiveAnalytics() {
   const [videoUrl, setVideoUrl] = useState('')
   const [videoId, setVideoId] = useState('')
   const [error, setError] = useState(null)
+  const WORKER_URL = import.meta.env.VITE_WORKER_URL
 
-  const { data, loading, error: fetchError, reset } = useYouTubeData(videoId, 30000)
+  const extractVideoId = (url) => {
+    const match = url.match(/(?:v=|\/)([0-9A-Za-z_-]{11})/)
+    return match ? match[1] : null
+  }
 
   const handleStart = () => {
-    if (!isValidYouTubeUrl(videoUrl)) {
-      setError('Please enter a valid YouTube URL')
-      return
-    }
     const id = extractVideoId(videoUrl)
     if (id) {
       setVideoId(id)
       setError(null)
+    } else {
+      setError('Please enter a valid YouTube URL')
     }
   }
 
   const handleStop = () => {
     setVideoId('')
-    reset()
   }
-
-  const latestData = data[data.length - 1]
 
   return (
     <div className="max-w-5xl mx-auto">
@@ -58,29 +55,7 @@ export default function LiveAnalytics() {
         </div>
       </div>
 
-      {latestData && (
-        <div className="grid grid-cols-3 gap-4 mb-6">
-          <div className="bg-ytgray p-4 rounded-lg text-center">
-            <div className="text-gray-400 text-sm">Views</div>
-            <div className="text-3xl font-bold text-ytred">{formatNumber(latestData.views)}</div>
-          </div>
-          <div className="bg-ytgray p-4 rounded-lg text-center">
-            <div className="text-gray-400 text-sm">Likes</div>
-            <div className="text-3xl font-bold text-green-500">{formatNumber(latestData.likes)}</div>
-          </div>
-          <div className="bg-ytgray p-4 rounded-lg text-center">
-            <div className="text-gray-400 text-sm">Comments</div>
-            <div className="text-3xl font-bold text-blue-500">{formatNumber(latestData.comments)}</div>
-          </div>
-        </div>
-      )}
-
-      {loading && <p className="text-center text-gray-400">⏳ Fetching data...</p>}
-      {fetchError && <p className="text-red-400 text-center">❌ {fetchError}</p>}
-
-      {data.length > 0 && (
-        <LiveGraph data={data} title={`Video ID: ${videoId}`} />
-      )}
+      {videoId && <LiveGraph videoId={videoId} WORKER_URL={WORKER_URL} />}
     </div>
   )
 }
